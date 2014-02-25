@@ -64,14 +64,14 @@ NS.UI = (function(ns) {
      */
     ns.NavBar = Backbone.View.extend({
         tagName: 'header',
-        className: 'navbar navbar-static-top',
+        className: 'navbar',
 
         events: {
             'submit .navbar-search': 'onSearch',
-            'click #context-nav a[data-key]': 'clickOnAction',
-            'click #nav-switch': 'clickOnContextSwitcher',
-            'click #main-nav .tile-wrapper': 'clickCancelNav',
-            'click #main-nav a': 'clickOnTile'
+            'click .navbar-actions a[data-key]': 'clickOnAction',
+            'click .navbar-switcher': 'clickOnContextSwitcher',
+            'click .navbar-tiles .tile-wrapper': 'clickCancelNav',
+            'click .navbar-tiles a': 'clickOnTile'
         },
 
         initialize: function (options) {
@@ -102,14 +102,14 @@ NS.UI = (function(ns) {
             this.$el.html(this.templates.navbar({
                 enableSearchBox: this.enableSearchBox
             }));
-            this.$actions = this.$el.find('#context-nav');
+            this.$actions = this.$el.find('.navbar-actions');
             this.renderActions();
-            this.$breadcrumbs = this.$el.find('#breadcrumbs');
+            this.$breadcrumbs = this.$el.find('.navbar-context');
             this.renderBreadcrumbs();
-            this.$contextSwitcherTiles = this.$el.find('#main-nav ul');
-            this.$contextSwitcherWrapper = this.$el.find('#main-nav .tile-wrapper');
+            this.$contextSwitcherTiles = this.$el.find('.navbar-tiles ul');
+            this.$contextSwitcherWrapper = this.$el.find('.navbar-tiles .tile-wrapper');
             this.renderContextSwitcher();
-            this.$userbox = this.$el.find('#current-user');
+            this.$userbox = this.$el.find('.navbar-user');
             this.renderUserDetails();
             this.setupSearchBox();
         },
@@ -183,7 +183,6 @@ NS.UI = (function(ns) {
                         this.$contextSwitcherTiles.append($(this.templates.tileItem({
                             title: tile.title,
                             tileClass: tile.tileClass + (this.context === tile.title ? ' active' : ''),
-                            iconClass: tile.iconClass,
                             url: tile.url
                         })));
                     }
@@ -290,26 +289,23 @@ NS.UI = (function(ns) {
         templates: {
             navbar:
                 '<div class="navbar-inner">' +
-                '    <div id="logo"></div>' +
-                '    <ul class="nav" id="breadcrumbs"></ul>' +
-                '    <ul class="nav" id="static-menu"><li><a href="#" id="nav-switch" title="Go to..."></a></li></ul>' +
-                '    <ul class="nav" id="context-nav"></ul>' +
+                '    <p class="navbar-logo navbar-text pull-left"></p>' +
+                '    <ul class="nav navbar-context"></ul>' +
+                '    <ul class="nav navbar-switcher"><li><a href="#" title="Go to..."></a></li></ul>' +
+                '    <ul class="nav navbar-actions"></ul>' +
                 '    <form class="navbar-search pull-right" action="#"><% if (data.enableSearchBox) { %>' +
-                '        <div class="input-append">' +
-                '            <input type="text" class="search-query span2">' +
-                '            <button type="submit" class="btn" >Go!</button>' +
-                '        </div>' +
+                '        <input type="text" class="search-query span2">' +
                 '    <% } %></form>' +
-                '    <div id="current-user" class="pull-right"></div>' +
+                '    <p class="navbar-text navbar-user pull-right"></p>' +
                 '</div>' +
-                '<section id="main-nav"><div class="tile-wrapper"><ul class="thumbnails"></ul></div></section>',
+                '<div class="navbar-tiles"><div class="tile-wrapper"><ul class="tiles"></ul></div></div>',
             userbox:
                 '<span class="username"><%= data.username %></span>',
             breadcrumbs:
                 '<li><a href="#"><%= data.appName %></a></li>' +
                 '<li><p class="navbar-text"><%= data.context %></p></li>',
             tileItem:
-                '<li class="tile <%= data.tileClass %>"><a href="<%= data.url %>"><i class="<%= data.iconClass %>"></i><h2><%= data.title %></h2></a></li>',
+                '<li class="tile <%= data.tileClass %>"><a href="<%= data.url %>"><i class="icon"></i><h2><%= data.title %></h2></a></li>',
             actionItem:
                 '<li>' +
                 '    <a href="<% if (data.url) { %><%= data.url %><% } else { %>#<% } %>" data-key="<%= data.key %>">' +
