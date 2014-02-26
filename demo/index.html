@@ -5,24 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <link rel="stylesheet" type="text/css" href="../../bootstrap-2.3.1/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../navbar.css" />
+    <link rel="stylesheet" type="text/css" href="../navbar-modernui.css" />
     <style type="text/css">
-        .navbar-user {padding: 0 1em;}
+        /* App-level customization (images, etc) */
 
-        .navbar .navbar-logo {background-image: url(logo.png); background-repeat: no-repeat; background-position: center center; width:25px; min-height: 40px;}
+        .navbar .navbar-logo {background-image: url(logo.png); width:25px;}
+        .navbar .navbar-user {padding-right: 28px; background: transparent url(icon-user.png) no-repeat scroll right center;}
 
-        .navbar-switcher > li {border-left: 1px solid #d4d4d4; position: relative; top: 5px;}
-        .navbar .navbar-switcher > li > a {padding: 5px 15px 5px 2px;}
-        .navbar-switcher > li > a:before {content: '\02c5'; font-weight: bold;}
-        
-        .navbar-tiles .tile-wrapper {display: none; height: 100%; position: fixed; top: 0; width: 100%; z-index: 1100;}
-        .navbar-tiles .tiles {display: none; background-color: #000; list-style: none; margin: 0;}
-        .navbar-tiles .tiles:before, .navbar-tiles .tiles:after {content: ""; display: table; line-height: 0; clear: both;}
-        .navbar-tiles .tiles li {border: 2px solid #000000; margin: 2.5em 1.5em; float: left; cursor: auto; width: auto; height: auto; padding: 0; display: block; text-align: center; opacity: 0.75;}
-        .navbar-tiles .tiles li a {display: block; height: 130px; padding: 5px; width: 130px; text-decoration: none;}
-        .navbar-tiles .tiles li h2 {color: #fff; font-weight: 100; font-size: 1.75em;}
-        .navbar-tiles .tiles li i.icon {display: inline-block; width: 64px; height: 64px; margin-top: 1px; vertical-align: text-top; background-repeat: no-repeat;}
-        .navbar-tiles .tiles li.tile-double a {width: 260px;}
-        .navbar-tiles .tiles li.active {border-color: #FFFFFF; opacity: 1;}
+        .navbar-actions > li > a[data-key] {background-position: 5px center; background-repeat: no-repeat; padding-left: 35px; padding-right: 5px;}
+        .navbar-actions > li > a[data-key="post"] {background-image: url("action-add.png");}
+        .navbar-actions > li > a[data-key="cancel"] {background-image: url("action-cancel.png");}
+        .navbar-actions > li > a[data-key="save"] {background-image: url("action-save.png");}
+
         .navbar-tiles .tiles .tile-home {background-color: #8CBF26;}
         .navbar-tiles .tiles .tile-home .icon {background-image: url(icon-home.png);}
         .navbar-tiles .tiles .tile-forum {background-color: #00ABA9;}
@@ -158,10 +153,10 @@
     <section id="content"></section>
     <section id="log-buttons">
         <p>
-            Try to log as:
-            <button class="btn" data-key="anonymous">Anonymous (can read only)</button>
-            <button class="btn" data-key="roger">Roger (can read and write)</button>
-            <button class="btn" data-key="gaston">Gaston (moderator)</button>
+            Try to sign in as a different user and see how the navbar will adapt to the user profile:<br>
+            <button class="btn" data-key="anonymous">Anonymous (can read only)</button><br>
+            <button class="btn" data-key="roger">Roger (can read and write)</button><br>
+            <button class="btn" data-key="gaston">Gaston (moderator)</button><br>
         </p>
     </section>
 </body>
