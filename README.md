@@ -31,10 +31,14 @@ Just create an instance of `NS.UI.NavBar` as you would with any `Backbone.View`
 and then, render it and attach it to your document (usually at the beginning of
 the body).
 
+### Configure contexts ###
+
 The init method accept several arguments, the most important being a list of
 your contexts. Each context is described with the following properties: a title,
 a URL, an optional CSS class string and a list of allowed user profiles. Have
 a look at the demo app to get the exact syntax.
+
+### Update contextual actions ###
 
 After that, you will have to use several NavBar method to keep it up to date.
 The `.setaActions()` method will let you control which contextual actions are
@@ -44,8 +48,19 @@ Actions are described by the following properties: a title and a list of allowed
 user profiles. The behaviour is given by either a URL (will behave as a link) or
 a handler (implement whatever behaviour you want in a callback function).
 
+### Additional features ###
+
+There are also methods to update user details (roles and name).
+
+A search box is also available, it can be enabled or disabled depending on your
+needs.
+
+Have a look at the demo application for more details about this configuration.
+
+### Styling ###
+
 Some CSS files are provided for an easy and rapid integration in a prototype.
-But you will probably need to refine or replace it
+But you will probably need to refine or replace it.
 
 ## About permission control ##
 
