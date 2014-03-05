@@ -75,7 +75,7 @@ If you have a look at the demo application, you will notice that the "Admin"
 tile disappear for non-moderator profiles. But one can still type `#admin` in
 the browser's location bar and the Backbone router will trigger the admin view.
 
-If you need to enforce some king of security, you will have to implement it by
+If you need to enforce some kind of security, you will have to implement it by
 yourself wherever it is relevant.
 
 ## Contributors ##
