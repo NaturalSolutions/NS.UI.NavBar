@@ -13,10 +13,14 @@
         .navbar .navbar-logo {background-image: url(logo.png); width:25px;}
         .navbar .navbar-user {padding-right: 28px; background: transparent url(icon-user.png) no-repeat scroll right center;}
 
-        .navbar-actions > li > a[data-key] {background-position: 5px center; background-repeat: no-repeat; padding-left: 35px; padding-right: 5px;}
-        .navbar-actions > li > a[data-key="post"] {background-image: url("action-add.png");}
-        .navbar-actions > li > a[data-key="cancel"] {background-image: url("action-cancel.png");}
-        .navbar-actions > li > a[data-key="save"] {background-image: url("action-save.png");}
+        /* Action icons using a regular image */
+        .navbar-actions > li > a[data-key="post"] {background-image: url("action-add.png"); background-position: 5px center; background-repeat: no-repeat; padding-left: 35px; padding-right: 5px;}
+
+        /* Action icon using Bootstrap's Glyphicon */
+        .navbar-actions > li > a[data-key="cancel"] {padding: 10px 5px;}
+        .navbar-actions > li > a[data-key="cancel"]:before {font-family: "Glyphicons Halflings"; content: ""; position: relative; top: 2px;}
+        .navbar-actions > li > a[data-key="save"] {padding: 10px 5px;}
+        .navbar-actions > li > a[data-key="save"]:before {font-family: "Glyphicons Halflings"; content: ""; position: relative; top: 2px;}
 
         .navbar-tiles .tiles .tile-home {background-color: #8CBF26;}
         .navbar-tiles .tiles .tile-home .icon {background-image: url(icon-home.png);}
