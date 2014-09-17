@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>NS.UI.NavBar demo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" type="text/css" href="../../bootstrap-3.2.0/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../bootstrap-3.2.0/css/bootstrap-theme.min.css" />
+    <link rel="stylesheet" type="text/css" href="../themes/navbar.bootstrap3.css" />
+    <style type="text/css">
+        /* App-level customization (images, etc) */
+
+        .navbar .navbar-logo {background-image: url(logo.png); width:25px;}
+        .navbar .navbar-user {padding-right: 28px; background: transparent url(icon-user.png) no-repeat scroll right center;}
+
+        .navbar-actions > li > a[data-key] {background-position: 5px center; background-repeat: no-repeat; padding-left: 35px; padding-right: 5px;}
+        .navbar-actions > li > a[data-key="post"] {background-image: url("action-add.png");}
+        .navbar-actions > li > a[data-key="cancel"] {background-image: url("action-cancel.png");}
+        .navbar-actions > li > a[data-key="save"] {background-image: url("action-save.png");}
+
+        .navbar-tiles .tiles .tile-home {background-color: #8CBF26;}
+        .navbar-tiles .tiles .tile-home .icon {background-image: url(icon-home.png);}
+        .navbar-tiles .tiles .tile-forum {background-color: #00ABA9;}
+        .navbar-tiles .tiles .tile-forum .icon {background-image: url(icon-forum.png);}
+        .navbar-tiles .tiles .tile-admin {background-color: #F09609;}
+        .navbar-tiles .tiles .tile-admin .icon {background-image: url(icon-admin.png);}
+
+        section {margin: 0.5em; padding: 0.5em;}
+        #content {font-size: 1.5em;}
+        #content code {font-size: inherit;}
+
+         
+
+        /* Spinning logo */
+        body.loading .navbar .navbar-logo {background-image: url("loading.png"); -moz-animation: spin 2s infinite linear; -o-animation: spin 2s infinite linear; -webkit-animation: spin 2s infinite linear; animation: spin 2s infinite linear;}
+        @-moz-keyframes spin {0% { -moz-transform: rotate(0deg); } 100% { -moz-transform: rotate(359deg); }}
+        @-webkit-keyframes spin {0% { -webkit-transform: rotate(0deg); } 100% { -webkit-transform: rotate(359deg); }}
+        @-o-keyframes spin {0% { -o-transform: rotate(0deg); } 100% { -o-transform: rotate(359deg); }}
+        @-ms-keyframes spin {0% { -ms-transform: rotate(0deg); } 100% { -ms-transform: rotate(359deg); }}
+        @keyframes spin {0% { transform: rotate(0deg); } 100% { transform: rotate(359deg); }}
+    </style>
+    <script type="text/javascript" src="../../jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="../../underscore-1.4.4/underscore.min.js"></script>
+    <script type="text/javascript" src="../../backbone-1.0/backbone.min.js"></script>
+    <script type="text/javascript" src="../navbar.js"></script>
+    <script type="text/javascript" src="../themes/navbar.bootstrap3.js"></script>
+    <script type="text/javascript">
+    $(function() {
+        /*
+         * Simulate some user data
+         */
+
+        var users = {
+            anonymous: {roles: ['reader']},
+            roger: {nickname: 'Roger', roles: ['reader', 'writer']},
+            gaston: {nickname: 'Gaston', roles: ['reader', 'writer', 'moderator']}
+        };
+
+        /*
+         * NavBar config
+         */
+
+        var navbar = new NS.UI.NavBar({
+                tiles: [
+                    {title: 'Home', tileClass: 'tile-home', url: '#', allowedRoles: ['reader']},
+                    {title: 'Forum', tileClass: 'tile-forum', url: '#forum', allowedRoles: ['reader']},
+                    {title: 'Administration', tileClass: 'tile-admin tile-double', url: '#admin', allowedRoles: ['moderator']}
+                ],
+                roles: users.gaston.roles,
+                username: users.gaston.nickname,
+                title: 'Test app'
+            });
+        navbar.$el.prependTo('body');
+
+        /*
+         * Setup search behavior
+         */
+
+         // Override this class method to decorate the search box and adapt it to your needs (autocomplete, etc)
+        NS.UI.NavBar.setupSearchBox = function($form) {
+            $form.find('input[type="text"]').attr({placeholder: 'Search...'});
+        };
+        // What to do when search box is used
+        navbar.on('search', function(word) {
+            if (word !== '') {
+                window.alert('User searched for "' + word + '"');
+            }
+        });
+
+        /*
+         * Routes config
+         */
+
+        var router = new (Backbone.Router.extend({
+            routes: {
+                '':          'home',
+                'forum':     'listPosts',
+                'forum/new': 'newPost',
+                'admin':     'admin'
+            },
+
+            setView: function(id, context, actions) {
+                // Update UI to simulate navigation toward another View
+                $('#content').html('<p>User triggered route: <code>' + id + '</code></p>');
+                navbar.setActions(actions || {});
+                navbar.setContext(context);
+            },
+
+            home: function() {
+                this.setView('home', 'Home');
+            },
+
+            listPosts: function() {
+                this.setView('listPosts', 'Forum', {
+                    post: new NS.UI.NavBar.Action({
+                        url: '#forum/new',
+                        title: 'New post',
+                        allowedRoles: ['writer']
+                    })
+                });
+            },
+
+            newPost: function() {
+                this.setView('newPost', 'Forum', {
+                    cancel: new NS.UI.NavBar.Action({
+                        handler: function () { Backbone.history.history.back(); },
+                        title: 'Cancel',
+                        allowedRoles: ['writer']
+                    }),
+                    save: new NS.UI.NavBar.Action({
+                        handler: function () {
+                            window.alert('OK, saved');
+                            router.navigate('#forum', {trigger: true});
+                        },
+                        title: 'Save',
+                        allowedRoles: ['writer']
+                    })
+                });
+            },
+
+            admin: function() {
+                this.setView('admin', 'Administration');
+            }
+        }))();
+
+        /*
+         * Buttons to test different configurations
+         */
+        $('#log-buttons button').on('click', function(e) {
+            var user = users[$(e.target).data('key')];
+            navbar.setRoles(user.roles);
+            navbar.setUsername(user.nickname);
+        });
+        $('#long-task button').on('click', function(e) {
+            var $btn = $(this);
+            $btn.attr('disabled', true);
+            $('body').not('.loading').addClass('loading').delay(5000).queue(function(next) {
+                $(this).removeClass('loading');
+                $btn.attr('disabled', false);
+                next();
+            });
+        });
+
+        /*
+         * Start application
+         */
+
+        Backbone.history.start({pushState: false});
+        navbar.render();
+    });
+    </script>
+</head>
+<body>
+    <section id="content"></section>
+    <section id="log-buttons">
+        <p>
+            Try to sign in as a different user and see how the navbar will adapt to the user profile:<br>
+            <button class="btn btn-default" data-key="anonymous">Anonymous (can read only)</button><br>
+            <button class="btn btn-default" data-key="roger">Roger (can read and write)</button><br>
+            <button class="btn btn-default" data-key="gaston">Gaston (moderator)</button><br>
+        </p>
+    </section>
+    <section id="long-task">
+        Start a long background task: <button class="btn btn-default">Go!</button>
+    </section>
+</body>
+</html>
